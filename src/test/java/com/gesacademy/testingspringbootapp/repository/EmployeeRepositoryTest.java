@@ -1,5 +1,6 @@
 package com.gesacademy.testingspringbootapp.repository;
 
+import com.gesacademy.testingspringbootapp.exception.ResourceNotFoundException;
 import com.gesacademy.testingspringbootapp.model.Employee;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -137,7 +138,7 @@ class EmployeeRepositoryTest {
 
         // When - action or the behaviour that we are going to test
         var savedEmployee = employeeRepository.findById(employee.getId())
-                .orElseThrow(() -> new AssertionError("Employee not found with id: " + employee.getId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Employee not found with id: " + employee.getId()));
 
         savedEmployee.setFirstName("Jane");
         savedEmployee.setLastName("Doe");

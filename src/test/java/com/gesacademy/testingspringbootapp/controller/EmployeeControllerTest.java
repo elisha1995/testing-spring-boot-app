@@ -12,6 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -85,4 +86,28 @@ class EmployeeControllerTest {
                 .andExpect(jsonPath("$.size()", is(listOfEmployees.size())));
     }
 
+    // get employee by id (positive scenario)
+    @Test
+    void givenEmployeeId_whenGetEmployeeById_thenReturnEmployeeObject() throws Exception {
+
+        // given - precondition or setup
+        Employee employee = Employee.builder()
+                .id(1L)
+                .firstName("John")
+                .lastName("Doe")
+                .email("john.doe@example.com")
+                .build();
+
+        given(employeeService.getEmployeeById(employee.getId())).willReturn(Optional.of(employee));
+
+        // when - action or behaviour that we are going test
+        ResultActions response = mockMvc.perform(get("/api/v1/employees/{id}", employee.getId()));
+
+        // then - verify the output
+        response.andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(jsonPath("$.firstName", is(employee.getFirstName())))
+                .andExpect(jsonPath("$.lastName", is(employee.getLastName())))
+                .andExpect(jsonPath("$.email", is(employee.getEmail())));
+    }
 }

@@ -3,6 +3,7 @@ package com.gesacademy.testingspringbootapp.controller;
 import com.gesacademy.testingspringbootapp.model.Employee;
 import com.gesacademy.testingspringbootapp.service.EmployeeService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,5 +28,12 @@ public class EmployeeController {
     @ResponseStatus(HttpStatus.OK)
     public List<Employee> getAllEmployees() {
         return employeeService.getAllEmployees();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Employee> getEmployeeById(@PathVariable("id") Long employeeId) {
+        return employeeService.getEmployeeById(employeeId)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }
