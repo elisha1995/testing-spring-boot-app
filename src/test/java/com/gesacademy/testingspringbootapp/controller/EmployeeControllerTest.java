@@ -1,25 +1,30 @@
 package com.gesacademy.testingspringbootapp.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gesacademy.testingspringbootapp.model.Employee;
 import com.gesacademy.testingspringbootapp.service.EmployeeService;
-import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
-import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+
+import static org.mockito.BDDMockito.given;
+import static org.hamcrest.CoreMatchers.is;
+
+
 
 @WebMvcTest
 class EmployeeControllerTest {
@@ -44,20 +49,20 @@ class EmployeeControllerTest {
                 .email("john.doe@example.com")
                 .build();
 
-        BDDMockito.given(employeeService.saveEmployee(ArgumentMatchers.any(Employee.class)))
+        given(employeeService.saveEmployee(ArgumentMatchers.any(Employee.class)))
                 .willAnswer(invocation -> invocation.getArgument(0));
 
         // when - action or behaviour that we are going test
-        ResultActions response = mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/employees")
+        ResultActions response = mockMvc.perform(post("/api/v1/employees")
                 .contentType("application/json")
                 .content(objectMapper.writeValueAsString(employee)));
 
         // then - verify the output
-        response.andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isCreated())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.firstName", CoreMatchers.is(employee.getFirstName())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.lastName", CoreMatchers.is(employee.getLastName())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.email", CoreMatchers.is(employee.getEmail())));
+        response.andDo(print())
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.firstName", is(employee.getFirstName())))
+                .andExpect(jsonPath("$.lastName", is(employee.getLastName())))
+                .andExpect(jsonPath("$.email", is(employee.getEmail())));
     }
 
     @Test
@@ -69,15 +74,15 @@ class EmployeeControllerTest {
                 Employee.builder().id(2L).firstName("Jane").lastName("Smith").email("jane.smith@example.com").build()
         );
 
-        BDDMockito.given(employeeService.getAllEmployees()).willReturn(listOfEmployees);
+        given(employeeService.getAllEmployees()).willReturn(listOfEmployees);
 
         // when - action or behaviour that we are going test
-        ResultActions response = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/employees"));
+        ResultActions response = mockMvc.perform(get("/api/v1/employees"));
 
         // then - verify the output
-        response.andExpect(MockMvcResultMatchers.status().isOk())
-                .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.size()", CoreMatchers.is(listOfEmployees.size())));
+        response.andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(jsonPath("$.size()", is(listOfEmployees.size())));
     }
 
 }
