@@ -1,6 +1,7 @@
 package com.gesacademy.testingspringbootapp.service;
 
 import com.gesacademy.testingspringbootapp.exception.ResourceAlreadyExistsException;
+import com.gesacademy.testingspringbootapp.exception.ResourceNotFoundException;
 import com.gesacademy.testingspringbootapp.model.Employee;
 import com.gesacademy.testingspringbootapp.repository.EmployeeRepository;
 import com.gesacademy.testingspringbootapp.service.impl.EmployeeServiceImpl;
@@ -11,7 +12,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -96,6 +96,7 @@ class EmployeeServiceTest {
         assertThat(employeesList).isNotNull();
         assertThat(employeesList.size()).isEqualTo(2);
     }
+
     @DisplayName("JUnit test for get all employees operation (negative scenario)")
     @Test
     void givenEmployeesList_whenGetAllEmployees_thenReturnEmptyEmployeesList() {
@@ -115,6 +116,20 @@ class EmployeeServiceTest {
         // Then - verify the output
         assertThat(employeesList).isEmpty();
         assertThat(employeesList.size()).isEqualTo(0);
+    }
+
+    @DisplayName("JUnit test for get employee by id operation")
+    @Test
+    void givenEmployeeId_whenGetEmployeeById_thenReturnEmployeeObject() {
+        // Given - precondition or setup
+        BDDMockito.given(employeeRepository.findById(1L)).willReturn(Optional.of(employee));
+
+        // When - action or the behaviour that we are going to test
+        Employee savedEmployee = employeeService.getEmployeeById(employee.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Employee not found with id: " + employee.getId()));
+
+        // Then - verify the output
+        assertThat(savedEmployee).isNotNull();
     }
 
 }
