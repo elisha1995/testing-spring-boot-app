@@ -13,6 +13,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import java.util.List;
 import java.util.Optional;
 
+import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -195,5 +196,20 @@ class EmployeeControllerTest {
     }
 
     // test for delete employee REST API
+    @Test
+    void givenEmployeeId_whenDeleteEmployee_thenReturn200() throws Exception {
+
+        // given - precondition or setup
+        Long employeeId = 1L;
+
+        willDoNothing().given(employeeService).deleteEmployee(employeeId);
+
+        // when - action or behaviour that we are going test
+        ResultActions response = mockMvc.perform(delete("/api/v1/employees/{id}", employeeId));
+
+        // then - verify the output
+        response.andExpect(status().isOk())
+                .andDo(print());
+    }
 
 }
