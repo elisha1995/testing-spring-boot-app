@@ -132,4 +132,20 @@ class EmployeeServiceTest {
         assertThat(savedEmployee).isNotNull();
     }
 
+    @DisplayName("JUnit test for update employee operation")
+    @Test
+    void givenEmployeeObject_whenUpdateEmployee_thenReturnUpdatedEmployee() {
+        // Given - precondition or setup
+        BDDMockito.given(employeeRepository.save(employee)).willReturn(employee);
+        employee.setEmail("ram@gmail.com");
+        employee.setFirstName("Ram");
+
+        // When - action or the behaviour that we are going to test
+        Employee updatedEmployee = employeeService.updateEmployee(employee);
+
+        // Then - verify the output
+        assertThat(updatedEmployee.getEmail()).isEqualTo("ram@gmail.com");
+        assertThat(updatedEmployee.getFirstName()).isEqualTo("Ram");
+    }
+
 }
