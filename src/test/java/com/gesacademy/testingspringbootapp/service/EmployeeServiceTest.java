@@ -1,28 +1,42 @@
 package com.gesacademy.testingspringbootapp.service;
 
+import com.gesacademy.testingspringbootapp.exception.ResourceAlreadyExistsException;
 import com.gesacademy.testingspringbootapp.model.Employee;
 import com.gesacademy.testingspringbootapp.repository.EmployeeRepository;
 import com.gesacademy.testingspringbootapp.service.impl.EmployeeServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.BDDMockito;
-import org.mockito.Mockito;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.*;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 
+@ExtendWith(MockitoExtension.class)
 class EmployeeServiceTest {
 
+    @Mock
     private EmployeeRepository employeeRepository;
 
-    private EmployeeService employeeService;
+    @InjectMocks
+    private EmployeeServiceImpl employeeService;
+
+    private Employee employee;
 
     @BeforeEach
     void setUp() {
-        employeeRepository = Mockito.mock(EmployeeRepository.class);
-        employeeService = new EmployeeServiceImpl(employeeRepository);
+        employee = Employee.builder()
+                .id(1L)
+                .firstName("John")
+                .lastName("Doe")
+                .email("john.doe@example.com")
+                .build();
     }
 
     @DisplayName("JUnit test for save employee operation")
@@ -30,13 +44,6 @@ class EmployeeServiceTest {
     void givenEmployeeObject_whenSave_thenReturnSavedEmployee() {
 
         // Given - precondition or setup
-        Employee employee = Employee.builder()
-                .id(1L)
-                .firstName("John")
-                .lastName("Doe")
-                .email("john.doe@example.com")
-                .build();
-
         BDDMockito.given(employeeRepository.findByEmail(employee.getEmail())).willReturn(Optional.empty());
 
         BDDMockito.given(employeeRepository.save(employee)).willReturn(employee);
@@ -46,5 +53,21 @@ class EmployeeServiceTest {
 
         // Then - verify the output
         assertThat(savedEmployee).isNotNull();
+    }
+
+    @DisplayName("JUnit test for save employee operation which throws exception")
+    @Test
+    void givenExistingEmail_whenSaveEmployee_thenThrowsException() {
+
+        // Given - precondition or setup
+        BDDMockito.given(employeeRepository.findByEmail(employee.getEmail())).willReturn(Optional.of(employee));
+
+        // When - action or the behaviour that we are going to test
+       assertThrows(ResourceAlreadyExistsException.class, () -> {
+            employeeService.saveEmployee(employee);
+        });
+
+        // Then
+        verify(employeeRepository, never()).save(employee);
     }
 }

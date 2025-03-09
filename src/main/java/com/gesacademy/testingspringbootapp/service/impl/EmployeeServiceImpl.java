@@ -1,5 +1,6 @@
 package com.gesacademy.testingspringbootapp.service.impl;
 
+import com.gesacademy.testingspringbootapp.exception.ResourceAlreadyExistsException;
 import com.gesacademy.testingspringbootapp.model.Employee;
 import com.gesacademy.testingspringbootapp.repository.EmployeeRepository;
 import com.gesacademy.testingspringbootapp.service.EmployeeService;
@@ -21,7 +22,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         Optional<Employee> savedEmployee = employeeRepository.findByEmail(employee.getEmail());
         if (savedEmployee.isPresent()) {
-            throw new RuntimeException("Employee already exist with given email:" + employee.getEmail());
+            throw new ResourceAlreadyExistsException("Employee already exist with given email:" + employee.getEmail());
         }
         return employeeRepository.save(employee);
     }
