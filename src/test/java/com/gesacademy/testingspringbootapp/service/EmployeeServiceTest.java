@@ -11,10 +11,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
@@ -68,6 +70,28 @@ class EmployeeServiceTest {
         });
 
         // Then
-        verify(employeeRepository, never()).save(employee);
+        //verify(employeeRepository, never()).save(employee);
+        verify(employeeRepository, never()).save(any(Employee.class));
+    }
+
+    @DisplayName("JUnit test for get all employees operation")
+    @Test
+    void givenEmployeesList_whenGetAllEmployees_thenReturnEmployeesList() {
+        // Given - precondition or setup
+        Employee employee2 = Employee.builder()
+                .id(2L)
+                .firstName("Jane")
+                .lastName("Doe")
+                .email("jane.doe@example.com")
+                .build();
+
+        BDDMockito.given(employeeRepository.findAll()).willReturn(List.of(employee, employee2));
+
+        // When - action or the behaviour that we are going to test
+        List<Employee> employees = employeeService.getAllEmployees();
+
+        // Then - verify the output
+        assertThat(employees).isNotNull();
+        assertThat(employees.size()).isEqualTo(2);
     }
 }
