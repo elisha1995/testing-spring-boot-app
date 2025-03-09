@@ -11,6 +11,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -88,10 +90,31 @@ class EmployeeServiceTest {
         BDDMockito.given(employeeRepository.findAll()).willReturn(List.of(employee, employee2));
 
         // When - action or the behaviour that we are going to test
-        List<Employee> employees = employeeService.getAllEmployees();
+        List<Employee> employeesList = employeeService.getAllEmployees();
 
         // Then - verify the output
-        assertThat(employees).isNotNull();
-        assertThat(employees.size()).isEqualTo(2);
+        assertThat(employeesList).isNotNull();
+        assertThat(employeesList.size()).isEqualTo(2);
     }
+    @DisplayName("JUnit test for get all employees operation (negative scenario)")
+    @Test
+    void givenEmployeesList_whenGetAllEmployees_thenReturnEmptyEmployeesList() {
+        // Given - precondition or setup
+        Employee employee2 = Employee.builder()
+                .id(2L)
+                .firstName("Jane")
+                .lastName("Doe")
+                .email("jane.doe@example.com")
+                .build();
+
+        BDDMockito.given(employeeRepository.findAll()).willReturn(Collections.emptyList());
+
+        // When - action or the behaviour that we are going to test
+        List<Employee> employeesList = employeeService.getAllEmployees();
+
+        // Then - verify the output
+        assertThat(employeesList).isEmpty();
+        assertThat(employeesList.size()).isEqualTo(0);
+    }
+
 }
