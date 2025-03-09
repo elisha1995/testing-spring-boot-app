@@ -110,4 +110,20 @@ class EmployeeControllerTest {
                 .andExpect(jsonPath("$.lastName", is(employee.getLastName())))
                 .andExpect(jsonPath("$.email", is(employee.getEmail())));
     }
+
+    // get employee by id (negative scenario)
+    @Test
+    void givenInvalidEmployeeId_whenGetEmployeeById_thenReturnNotFound() throws Exception {
+
+        // given - precondition or setup
+        Long employeeId = 1L;
+        given(employeeService.getEmployeeById(employeeId)).willReturn(Optional.empty());
+
+        // when - action or behaviour that we are going test
+        ResultActions response = mockMvc.perform(get("/api/v1/employees/{id}", employeeId));
+
+        // then - verify the output
+        response.andExpect(status().isNotFound())
+                .andDo(print());
+    }
 }
