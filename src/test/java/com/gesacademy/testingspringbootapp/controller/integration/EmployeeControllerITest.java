@@ -12,11 +12,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -179,6 +176,26 @@ public class EmployeeControllerITest {
 
         // then - verify the output
         response.andExpect(status().isNotFound())
+                .andDo(print());
+    }
+
+    @Test
+    void givenEmployeeId_whenDeleteEmployee_thenReturn200() throws Exception {
+
+        // given - precondition or setup
+        Employee employee = Employee.builder()
+                .firstName("John")
+                .lastName("Doe")
+                .email("john.doe@example.com")
+                .build();
+
+        employeeRepository.save(employee);
+
+        // when - action or behaviour that we are going test
+        ResultActions response = mockMvc.perform(delete("/api/v1/employees/{id}", employee.getId()));
+
+        // then - verify the output
+        response.andExpect(status().isOk())
                 .andDo(print());
     }
 }
