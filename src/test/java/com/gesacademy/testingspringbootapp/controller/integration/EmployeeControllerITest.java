@@ -150,6 +150,11 @@ public class EmployeeControllerITest {
                 .andExpect(jsonPath("$.email", is(updatedEmployee.getEmail())));
     }
 
+    /**
+     * JUnit test for update employee operation (negative scenario)
+     *
+     * @throws Exception
+     */
     @Test
     void givenUpdatedEmployee_whenUpdateEmployee_thenReturn404() throws Exception {
 

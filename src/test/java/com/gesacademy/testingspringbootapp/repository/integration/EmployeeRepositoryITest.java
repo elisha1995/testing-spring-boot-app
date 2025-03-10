@@ -1,26 +1,23 @@
-package com.gesacademy.testingspringbootapp.repository;
+package com.gesacademy.testingspringbootapp.repository.integration;
 
 import com.gesacademy.testingspringbootapp.exception.ResourceNotFoundException;
 import com.gesacademy.testingspringbootapp.model.Employee;
+import com.gesacademy.testingspringbootapp.repository.EmployeeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
-class EmployeeRepositoryTest {
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+public class EmployeeRepositoryITest {
 
     @Autowired
     private EmployeeRepository employeeRepository;
-
-    /*private final EmployeeRepository employeeRepository;
-
-    EmployeeRepositoryTest(EmployeeRepository employeeRepository) {
-        this.employeeRepository = employeeRepository;
-    }*/
 
     private Employee employee;
 
@@ -39,19 +36,12 @@ class EmployeeRepositoryTest {
     public void givenEmployeeObject_whenSave_thenReturnSavedEmployee() {
 
         // Given - precondition or setup
-        /*Employee employee = Employee.builder()
-                .firstName("John")
-                .lastName("Doe")
-                .email("john.doe@example.com")
-                .build();*/
+
 
         // When - action or the behaviour that we are going to test
         Employee savedEmployee = employeeRepository.save(employee);
 
         // Then - verify the output
-        /*assertNotNull(savedEmployee);
-        assertTrue(savedEmployee.getId() > 0);*/
-
         assertThat(savedEmployee).isNotNull();
         assertThat(savedEmployee.getId()).isGreaterThan(0);
     }
@@ -59,13 +49,8 @@ class EmployeeRepositoryTest {
     // JUnit test for get all employees operation
     @Test
     public void givenEmployeesList_whenFindAll_thenEmployeesList() {
-        // Given - precondition or setup
-        /*Employee employee1 = Employee.builder()
-                .firstName("John")
-                .lastName("Doe")
-                .email("john.doe@example.com")
-                .build();*/
 
+        // Given - precondition or setup
         Employee employee2 = Employee.builder()
                 .firstName("Jane")
                 .lastName("Doe")
@@ -86,13 +71,8 @@ class EmployeeRepositoryTest {
     // JUnit test for get employee by id operation
     @Test
     public void givenEmployeeObject_whenFindById_thenReturnEmployeeObject() {
-        // Given - precondition or setup
-        /*Employee employee = Employee.builder()
-                .firstName("John")
-                .lastName("Doe")
-                .email("john.doe@example.com")
-                .build();*/
 
+        // Given - precondition or setup
         employeeRepository.save(employee);
 
         // When - action or the behaviour that we are going to test
@@ -106,13 +86,8 @@ class EmployeeRepositoryTest {
     @DisplayName("JUnit test for get employee by email operation")
     @Test
     public void givenEmployeeEmail_whenFindByEmail_thenReturnEmployeeObject() {
-        // Given - precondition or setup
-        /*Employee employee = Employee.builder()
-                .firstName("John")
-                .lastName("Doe")
-                .email("john.doe@example.com")
-                .build();*/
 
+        // Given - precondition or setup
         employeeRepository.save(employee);
 
         // When - action or the behaviour that we are going to test
@@ -126,13 +101,8 @@ class EmployeeRepositoryTest {
     @DisplayName("JUnit test for update employee operation")
     @Test
     public void givenEmployeeObject_whenUpdateEmployee_thenReturnUpdatedEmployee() {
-        // Given - precondition or setup
-        /*Employee employee = Employee.builder()
-                .firstName("John")
-                .lastName("Doe")
-                .email("john.doe@example.com")
-                .build();*/
 
+        // Given - precondition or setup
         employeeRepository.save(employee);
 
         // When - action or the behaviour that we are going to test
@@ -155,13 +125,8 @@ class EmployeeRepositoryTest {
     @DisplayName("JUnit test for delete employee operation")
     @Test
     public void givenEmployeeObject_whenDelete_thenRemoveEmployee() {
-        // Given - precondition or setup
-        /*Employee employee = Employee.builder()
-                .firstName("John")
-                .lastName("Doe")
-                .email("john.doe@example.com")
-                .build();*/
 
+        // Given - precondition or setup
         employeeRepository.save(employee);
 
         // When - action or the behaviour that we are going to test
@@ -176,13 +141,8 @@ class EmployeeRepositoryTest {
     @DisplayName("JUnit test for custom query using JPQL with named parameters")
     @Test
     public void givenFirstNameAndLastName_whenFindByJPQL_thenReturnEmployeeObject() {
-        // Given - precondition or setup
-        /*Employee employee = Employee.builder()
-                .firstName("John")
-                .lastName("Doe")
-                .email("john.doe@example.com")
-                .build();*/
 
+        // Given - precondition or setup
         employeeRepository.save(employee);
 
         // When - action or the behaviour that we are going to test
@@ -196,13 +156,8 @@ class EmployeeRepositoryTest {
     @DisplayName("JUnit test for custom query using JPQL index parameters")
     @Test
     public void givenFirstNameAndLastName_whenFindByJPQLIndexed_thenReturnEmployeeObject() {
-        // Given - precondition or setup
-        /*Employee employee = Employee.builder()
-                .firstName("John")
-                .lastName("Doe")
-                .email("john.doe@example.com")
-                .build();*/
 
+        // Given - precondition or setup
         employeeRepository.save(employee);
 
         String firstName = "John";
@@ -219,13 +174,8 @@ class EmployeeRepositoryTest {
     @DisplayName("JUnit test for custom query using native SQL with named parameters")
     @Test
     public void givenFirstNameAndLastName_whenFindByNativeSQL_thenReturnEmployeeObject() {
-        // Given - precondition or setup
-        /*Employee employee = Employee.builder()
-                .firstName("John")
-                .lastName("Doe")
-                .email("john.doe@example.com")
-                .build();*/
 
+        // Given - precondition or setup
         employeeRepository.save(employee);
 
         // When - action or the behaviour that we are going to test
@@ -239,13 +189,8 @@ class EmployeeRepositoryTest {
     @DisplayName("JUnit test for custom query using native SQL with index parameters")
     @Test
     public void givenFirstNameAndLastName_whenFindByNativeSQLIndexed_thenReturnEmployeeObject() {
-        // Given - precondition or setup
-        /*Employee employee = Employee.builder()
-                .firstName("John")
-                .lastName("Doe")
-                .email("john.doe@example.com")
-                .build();*/
 
+        // Given - precondition or setup
         employeeRepository.save(employee);
 
         // When - action or the behaviour that we are going to test
