@@ -26,10 +26,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
-@Testcontainers
-public class EmployeeControllerIT {
+//@Testcontainers
+public class EmployeeControllerIT extends AbstractContainerBaseTest {
 
-    @Container
+    /*@Container
     private static final MySQLContainer<?> mySQLContainer = new MySQLContainer<>("mysql:latest");
 
     @DynamicPropertySource
@@ -38,7 +38,7 @@ public class EmployeeControllerIT {
         registry.add("spring.datasource.username", mySQLContainer::getUsername);
         registry.add("spring.datasource.password", mySQLContainer::getPassword);
 
-    }
+    }*/
 
     @Autowired
     private MockMvc mockMvc;
@@ -58,10 +58,10 @@ public class EmployeeControllerIT {
     void givenEmployeeObject_whenCreateEmployee_thenReturnSavedEmployee() throws Exception {
 
         // just to know the details of the container
-        System.out.println("MySQL Container JDBC URL: " + mySQLContainer.getJdbcUrl());
+        /*System.out.println("MySQL Container JDBC URL: " + mySQLContainer.getJdbcUrl());
         System.out.println("MySQL Container Username: " + mySQLContainer.getUsername());
         System.out.println("MySQL Container Password: " + mySQLContainer.getPassword());
-        System.out.println("MySQL Container Database: " + mySQLContainer.getDatabaseName());
+        System.out.println("MySQL Container Database: " + mySQLContainer.getDatabaseName());*/
 
         // given - precondition or setup
         Employee employee = Employee.builder()
