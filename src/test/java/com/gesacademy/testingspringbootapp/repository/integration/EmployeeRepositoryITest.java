@@ -1,5 +1,6 @@
 package com.gesacademy.testingspringbootapp.repository.integration;
 
+import com.gesacademy.testingspringbootapp.controller.integration.testcontainer.AbstractContainerBaseTest;
 import com.gesacademy.testingspringbootapp.exception.ResourceNotFoundException;
 import com.gesacademy.testingspringbootapp.model.Employee;
 import com.gesacademy.testingspringbootapp.repository.EmployeeRepository;
@@ -14,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class EmployeeRepositoryITest {
+public class EmployeeRepositoryITest extends AbstractContainerBaseTest {
 
     @Autowired
     private EmployeeRepository employeeRepository;
